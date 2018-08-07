@@ -7,13 +7,23 @@ import android.content.Intent;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Spinner;
 
 public class ProductEditActivity extends AppCompatActivity {
 
-    private final static int RESULT_CAMERA = 1001;//これがないと保存できないです。
-    private ImageView imageView;//イメージビューの宣言文
+    private final static int RESULT_CAMERA = 1001;
+
+    private ImageView IMAGE_VIEW;
+    private Button CAMERA_BUTTON;
+    private Spinner CATEGORY_SPINNER;
+
+    private byte[] _byteImage;
+    private String _today;
+    private String _category;
+    private int _done;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,12 +31,32 @@ public class ProductEditActivity extends AppCompatActivity {
         setContentView(R.layout.activity_product_edit);
 
         Intent intent = this.getIntent();
-        Bitmap image = (Bitmap) intent.getParcelableExtra("bitImage");
-        imageView = findViewById(R.id.image_view);//先にImageViewをレイアウトビューのIDと紐づけ
-        imageView.setImageBitmap(image);
+        Bitmap image = (Bitmap) intent.getParcelableExtra("Image");
 
-        Button cameraButton = findViewById(R.id.camera_button);
-        cameraButton.setOnClickListener(new View.OnClickListener() {//普通のインナークラスを使っての実装
+        // 画像のBitMapをbyteに変換
+        _byteImage = Tool.getToolBytes(image);
+
+        // ImageView の紐付け
+        IMAGE_VIEW = findViewById(R.id.image_view);
+        IMAGE_VIEW.setImageBitmap(image);
+
+        // Spinner の紐付け と 選択したアイテムの取得
+        CATEGORY_SPINNER = findViewById(R.id.category_spinner);
+        CATEGORY_SPINNER.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Spinner spinner = (Spinner) parent;
+                // 選択したアイテムを取得
+                _category = (String) spinner.getSelectedItem();
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) { // アイテムを選択しなかったとき
+            }
+        });
+
+        // 画像の取り直し　Button の紐付け
+        CAMERA_BUTTON = findViewById(R.id.camera_button);
+        CAMERA_BUTTON.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -38,8 +68,7 @@ public class ProductEditActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == RESULT_CAMERA) {
-            Bitmap bitmap;//BitMapも最適。
-            // cancelしたケースも含む
+            Bitmap bitmap;
             if( data.getExtras() == null){
                 Log.d("debug","cancel ?");
                 return;
@@ -53,11 +82,13 @@ public class ProductEditActivity extends AppCompatActivity {
                 Log.d("debug",String.format("w= %d",bmpWidth));
                 Log.d("debug",String.format("h= %d",bmpHeight));
             }
-            imageView.setImageBitmap(bitmap);
+
+            IMAGE_VIEW.setImageBitmap(bitmap);
         }
     }
 
     public void onCreateButtonClick(View view) {
-        
+        Log.d("result",""+_byteImage);
+        Log.d("result",""+_category);
     }
 }

@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">マイライブラリ</string>
+    <string-array name="category_list">
+    <item>肉</item>
+    <item>魚</item>
+    <item>野菜</item>
+    <item>果物</item>
+    <item>調味料</item>
+    <item>酒</item>
+    <item>飲料水</item>
+    <item>お菓子</item>
+    <item>その他</item>
+    </string-array>
 </resources>

@@ -12,7 +12,7 @@ public class ProductListActivity extends AppCompatActivity {
 
     static final int MODE_INSERT = 1;
     static final int MODE_EDIT = 2;
-    private final static int RESULT_CAMERA = 1001;//これがないと保存できないです。
+    private final static int RESULT_CAMERA = 1001;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +48,7 @@ public class ProductListActivity extends AppCompatActivity {
 
             Intent intent = new Intent(ProductListActivity.this, ProductEditActivity.class);
             intent.putExtra("mode", MODE_INSERT);
-            intent.putExtra("bitImage", bitmap);
+            intent.putExtra("Image", bitmap);
             startActivity(intent);
         }
     }
