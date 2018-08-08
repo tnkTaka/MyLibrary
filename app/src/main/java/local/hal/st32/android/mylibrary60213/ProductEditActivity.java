@@ -25,15 +25,18 @@ import java.util.Date;
 public class ProductEditActivity extends AppCompatActivity {
 
     private final static int RESULT_CAMERA = 1001;
+    private int _mode = ProductListActivity.MODE_INSERT;
 
     private ImageView IMAGE_VIEW;
     private Button CAMERA_BUTTON;
     private Spinner CATEGORY_SPINNER;
     private EditText DEADLINE_EDIT_TEXT;
+    private Button CREATE_BUTTON;
 
+    private int _idNo;
     private byte[] _byteImage;
     private String _deadline;
-    private String _category;
+    private int _category;
     private int _done;
 
     @Override
@@ -43,14 +46,59 @@ public class ProductEditActivity extends AppCompatActivity {
 
         // 今日日付の取得
         Date now = new Date(System.currentTimeMillis());
-        DateFormat formatter = new SimpleDateFormat("yyyy年MM月dd");
+        DateFormat formatter = new SimpleDateFormat("yyyy年MM月dd日");
         _deadline = formatter.format(now);
 
         Intent intent = this.getIntent();
-        Bitmap image = (Bitmap) intent.getParcelableExtra("Image");
+        _mode = intent.getIntExtra("mode",ProductListActivity.MODE_INSERT);
 
-        // 画像の取り直しButton の紐付け
+        // 紐付け
         CAMERA_BUTTON = findViewById(R.id.camera_button);
+        IMAGE_VIEW = findViewById(R.id.image_view);
+        CATEGORY_SPINNER = findViewById(R.id.category_spinner);
+        DEADLINE_EDIT_TEXT = findViewById(R.id.deadline_editText);
+        CREATE_BUTTON = findViewById(R.id.create_button);
+
+        if(_mode == ProductListActivity.MODE_INSERT){
+            Bitmap image = (Bitmap) intent.getParcelableExtra("Image");
+
+            _byteImage = Tool.getToolBytes(image);
+            IMAGE_VIEW.setImageBitmap(image);
+            DEADLINE_EDIT_TEXT.setText(_deadline);
+        }else {
+            _idNo = intent.getIntExtra("idNo", 0);
+
+            Log.d("idNo",""+_idNo);
+            DatabaseHelper helper = new DatabaseHelper(ProductEditActivity.this);
+            SQLiteDatabase db = helper.getWritableDatabase();
+
+            try{
+                Product productData = DatabaseAccess.findByPK(db, _idNo);
+                _byteImage = productData.getImage();
+                _category = productData.getCategory();
+                _deadline = productData.getDeadline();
+
+                IMAGE_VIEW.setImageBitmap(Tool.getToolImage(_byteImage));
+                CATEGORY_SPINNER.setSelection(_category);
+                DEADLINE_EDIT_TEXT.setText(_deadline);
+                CREATE_BUTTON.setText("更新");
+            }catch(Exception ex) {
+                Log.e("ERROR", ex.toString());
+            }
+            finally {
+                db.close();
+            }
+        }
+
+        CATEGORY_SPINNER.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                _category = position;
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) { // アイテムを選択しなかったとき
+            }
+        });
         CAMERA_BUTTON.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -58,31 +106,6 @@ public class ProductEditActivity extends AppCompatActivity {
                 startActivityForResult(intent, RESULT_CAMERA);
             }
         });
-
-        // 画像のBitMapをbyteに変換
-        _byteImage = Tool.getToolBytes(image);
-
-        // ImageView の紐付け
-        IMAGE_VIEW = findViewById(R.id.image_view);
-        IMAGE_VIEW.setImageBitmap(image);
-
-        // Spinner の紐付け と 選択したアイテムの取得
-        CATEGORY_SPINNER = findViewById(R.id.category_spinner);
-        CATEGORY_SPINNER.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Spinner spinner = (Spinner) parent;
-                // 選択したアイテムを取得
-                _category = (String) spinner.getSelectedItem();
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> arg0) { // アイテムを選択しなかったとき
-            }
-        });
-
-        // 賞味期限EditText の紐付け
-        DEADLINE_EDIT_TEXT = findViewById(R.id.deadline_editText);
-        DEADLINE_EDIT_TEXT.setText(_deadline);
 
     }
 
@@ -104,6 +127,7 @@ public class ProductEditActivity extends AppCompatActivity {
                 Log.d("debug",String.format("h= %d",bmpHeight));
             }
 
+            _byteImage = Tool.getToolBytes(bitmap);
             IMAGE_VIEW.setImageBitmap(bitmap);
         }
     }
@@ -119,18 +143,17 @@ public class ProductEditActivity extends AppCompatActivity {
     }
 
     public void onCreateButtonClick(View view) {
-
         _deadline = DEADLINE_EDIT_TEXT.getText().toString();
-
-        Log.d("Create",""+_byteImage);
-        Log.d("Create",_deadline);
-        Log.d("Create",_category);
-        Log.d("Create",""+_done);
 
         DatabaseHelper helper = new DatabaseHelper(ProductEditActivity.this);
         SQLiteDatabase db = helper.getWritableDatabase();
         try {
-            DatabaseAccess.insert(db, _category, _deadline, _done, _byteImage);
+            if (_mode == ProductListActivity.MODE_INSERT){
+                DatabaseAccess.insert(db, _category, _deadline, _done, _byteImage);
+            }else {
+                DatabaseAccess.update(db, _idNo, _category, _deadline, _done, _byteImage);
+            }
+
         } catch(Exception ex) {
             Log.e("DB_ERROR", ex.toString());
         } finally {

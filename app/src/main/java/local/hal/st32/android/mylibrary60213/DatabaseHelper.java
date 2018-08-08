@@ -18,7 +18,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         StringBuffer ps = new StringBuffer();
         ps.append("CREATE TABLE products (");
         ps.append("_id INTEGER PRIMARY KEY AUTOINCREMENT,");
-        ps.append("category TEXT NOT NULL,");
+        ps.append("category INTEGER NOT NULL,");
         ps.append("deadline DATE NOT NULL,");
         ps.append("done INTEGER DEFAULT 0 NOT NULL,");
         ps.append("image BLOB NOT NULL");

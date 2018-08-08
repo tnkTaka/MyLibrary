@@ -25,7 +25,7 @@ public class DatabaseAccess {
             int idxDone = cursor.getColumnIndex("done");
             int idxImage = cursor.getColumnIndex("image");
 
-            String category = cursor.getString(idxCategory);
+            int category = cursor.getInt(idxCategory);
             String deadline = cursor.getString(idxDeadline);
             int done = cursor.getInt(idxDone);
             byte[] image = cursor.getBlob(idxImage);
@@ -40,15 +40,27 @@ public class DatabaseAccess {
         return result;
     }
 
-    public static long insert(SQLiteDatabase db, String category, String deadline, int done, byte[] image) {
+    public static long insert(SQLiteDatabase db, int category, String deadline, int done, byte[] image) {
         String sql = "INSERT INTO products (category, deadline, done, image) VALUES (?, ?, ?, ?)";
         SQLiteStatement stmt = db.compileStatement(sql);
-        stmt.bindString(1, category);
+        stmt.bindLong(1, category);
         stmt.bindString(2, deadline);
         stmt.bindLong(3, done);
         stmt.bindBlob(4, image);
         long id = stmt.executeInsert();
         return id;
+    }
+
+    public static int update(SQLiteDatabase db, int id, int category, String deadline, int done, byte[] image) {
+        String sql = "UPDATE products SET category = ?, deadline = ?, done = ?, image = ? WHERE _id = ?";
+        SQLiteStatement stmt = db.compileStatement(sql);
+        stmt.bindLong(1, category);
+        stmt.bindString(2, deadline);
+        stmt.bindLong(3, done);
+        stmt.bindBlob(4, image);
+        stmt.bindLong(5, id);
+        int result = stmt.executeUpdateDelete();
+        return result;
     }
 
     public static int delete(SQLiteDatabase db, int id) {

@@ -8,12 +8,12 @@
     android:orientation="vertical">
 
     <GridView
-        android:id="@+id/grid_view_image_text"
+        android:id="@+id/gridView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:columnWidth="125dp"
+        android:columnWidth="50dp"
         android:gravity="center"
-        android:numColumns="auto_fit"
+        android:numColumns="3"
         app:layout_constraintBottom_toTopOf="@+id/button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.504"

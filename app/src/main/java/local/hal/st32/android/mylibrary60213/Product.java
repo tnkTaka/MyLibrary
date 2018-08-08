@@ -4,7 +4,7 @@ import java.sql.Timestamp;
 
 public class Product {
     private int _id;
-    private String _category;
+    private int _category;
     private String _deadline;
     private int _done;
     private byte[] _image;
@@ -16,10 +16,10 @@ public class Product {
         _id = id;
     }
 
-    public String getCategory(){
+    public int getCategory(){
         return _category;
     }
-    public void  setCategory(String category){
+    public void  setCategory(int category){
         _category = category;
     }
 
