@@ -96,7 +96,8 @@ public class ProductEditActivity extends AppCompatActivity {
                 _category = position;
             }
             @Override
-            public void onNothingSelected(AdapterView<?> arg0) { // アイテムを選択しなかったとき
+            public void onNothingSelected(AdapterView<?> arg0) {
+                // selectしなかった場合
             }
         });
         CAMERA_BUTTON.setOnClickListener(new View.OnClickListener() {

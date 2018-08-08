@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/menu_revert"
+        android:icon="@android:drawable/ic_menu_revert"
+        android:title="initial"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/menu_category"
+        android:title="カテゴリー"
+        app:showAsAction="never">
+        <menu>
+            <item
+                android:id="@+id/menu_category_meet"
+                android:title="肉"
+                app:showAsAction="never"
+                />
+            <item
+                android:id="@+id/menu_category_fish"
+                android:title="魚"
+                app:showAsAction="never"
+                />
+            <item
+                android:id="@+id/menu_category_vegetable"
+                android:title="野菜"
+                app:showAsAction="never"
+                />
+            <item
+                android:id="@+id/menu_category_fruit"
+                android:title="果物"
+                app:showAsAction="never"
+                />
+            <item
+                android:id="@+id/menu_category_seasoning"
+                android:title="調味料"
+                app:showAsAction="never"
+                />
+            <item
+                android:id="@+id/menu_category_alcohol"
+                android:title="酒"
+                app:showAsAction="never"
+                />
+            <item
+                android:id="@+id/menu_category_drink"
+                android:title="飲料水"
+                app:showAsAction="never"
+                />
+            <item
+                android:id="@+id/menu_category_sweetTreat"
+                android:title="お菓子"
+                app:showAsAction="never"
+                />
+            <item
+                android:id="@+id/menu_category_other"
+                android:title="その他"
+                app:showAsAction="never"
+                />
+        </menu>
+    </item>
+
+</menu>

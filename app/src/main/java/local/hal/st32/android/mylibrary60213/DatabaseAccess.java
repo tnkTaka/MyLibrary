@@ -6,9 +6,13 @@ import android.database.sqlite.SQLiteStatement;
 
 public class DatabaseAccess {
 
-    public static Cursor findAll(SQLiteDatabase db) {
-        //全ての場合
-        String sql = "SELECT _id, category, deadline, done, image FROM products ORDER BY deadline DESC";
+    public static Cursor findAll(SQLiteDatabase db, int category, int selectionState) {
+        String sql ="";
+        if (selectionState == 0){
+            sql = "SELECT _id, category, deadline, done, image FROM products ORDER BY deadline DESC";
+        }else if (selectionState == 1){
+            sql = "SELECT _id, category, deadline, done, image FROM products WHERE category = "+category+" ORDER BY deadline DESC";
+        }
 
         Cursor cursor = db.rawQuery(sql, null);
         return cursor;
