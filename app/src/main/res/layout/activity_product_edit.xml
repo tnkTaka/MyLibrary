@@ -18,6 +18,7 @@
         android:layout_marginRight="50dp"
         android:layout_marginStart="50dp"
         android:text="撮り直す"
+        android:textColor="#aff22c6e"
         app:layout_constraintBottom_toTopOf="@+id/category_spinner"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -39,10 +40,11 @@
     <Button
         android:id="@+id/create_button"
         android:layout_width="0dp"
-        android:layout_height="47dp"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:onClick="onCreateButtonClick"
         android:text="登録"
+        android:textColor="#aff22c6e"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
