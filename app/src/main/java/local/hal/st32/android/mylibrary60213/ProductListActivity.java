@@ -23,6 +23,7 @@ public class ProductListActivity extends AppCompatActivity {
 
     private final static int RESULT_CAMERA = 1001;
 
+    private Intent INTENT;
     private GridView GRID_VIEW_IMAGE_TEXT;
     private Menu MENU;
 
@@ -39,6 +40,7 @@ public class ProductListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_product_list);
 
         GRID_VIEW_IMAGE_TEXT = findViewById(R.id.gridView);
+        INTENT = new Intent(ProductListActivity.this, ProductEditActivity.class);
     }
 
     @Override
@@ -68,14 +70,9 @@ public class ProductListActivity extends AppCompatActivity {
         int i = 0;
         if(cursor.moveToFirst()){
             do {
-                int id = cursor.getInt(cursor.getColumnIndex("_id"));
-                int category = cursor.getInt(cursor.getColumnIndex("category"));
-                String deadline = cursor.getString(cursor.getColumnIndex("deadline"));
-                Bitmap image = Tool.getToolImage(cursor.getBlob(cursor.getColumnIndex("image")));
-
-                _id[i] = id;
-                _deadlines[i] = "賞味期限 : "+deadline;
-                _images[i] = image;
+                _id[i] = cursor.getInt(cursor.getColumnIndex("_id"));;
+                _deadlines[i] = "賞味期限 : "+cursor.getString(cursor.getColumnIndex("deadline"));
+                _images[i] = Tool.getToolImage(cursor.getBlob(cursor.getColumnIndex("image")));
 
                 i ++;
             }while (cursor.moveToNext());
@@ -86,10 +83,9 @@ public class ProductListActivity extends AppCompatActivity {
         GRID_VIEW_IMAGE_TEXT.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(ProductListActivity.this, ProductEditActivity.class);
-                intent.putExtra("mode", MODE_EDIT);
-                intent.putExtra("idNo", _id[position]);
-                startActivity(intent);
+                INTENT.putExtra("mode", MODE_EDIT);
+                INTENT.putExtra("idNo", _id[position]);
+                startActivity(INTENT);
             }
         });
     }
@@ -112,10 +108,9 @@ public class ProductListActivity extends AppCompatActivity {
                 Log.d("debug",String.format("h= %d",bmpHeight));
             }
 
-            Intent intent = new Intent(ProductListActivity.this, ProductEditActivity.class);
-            intent.putExtra("mode", MODE_INSERT);
-            intent.putExtra("Image", bitmap);
-            startActivity(intent);
+            INTENT.putExtra("mode", MODE_INSERT);
+            INTENT.putExtra("Image", bitmap);
+            startActivity(INTENT);
         }
     }
 
