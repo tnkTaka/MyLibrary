@@ -3,10 +3,11 @@ package local.hal.st32.android.mylibrary60213;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
+import android.graphics.Bitmap;
 
 public class DatabaseAccess {
 
-    public static Cursor findAll(SQLiteDatabase db, int category, int selectionState) {
+    public static Product findAll(SQLiteDatabase db, int category, int selectionState) {
         String sql ="";
         if (selectionState == 0){
             sql = "SELECT _id, category, deadline, done, image FROM products ORDER BY deadline DESC";
@@ -15,7 +16,29 @@ public class DatabaseAccess {
         }
 
         Cursor cursor = db.rawQuery(sql, null);
-        return cursor;
+        Product result = null;
+
+        int[] gridIds = new int[cursor.getCount()];
+        String[] gridDeadlines = new String[cursor.getCount()];
+        Bitmap[] gridImages = new Bitmap[cursor.getCount()];
+
+        int i = 0;
+        if(cursor.moveToFirst()){
+            do {
+                gridIds[i] = cursor.getInt(cursor.getColumnIndex("_id"));;
+                gridDeadlines[i] = "賞味期限 : "+cursor.getString(cursor.getColumnIndex("deadline"));
+                gridImages[i] = Tool.getToolImage(cursor.getBlob(cursor.getColumnIndex("image")));
+
+                i ++;
+            }while (cursor.moveToNext());
+        }
+
+        result = new Product();
+        result.setGridId(gridIds);
+        result.setGridDeadline(gridDeadlines);
+        result.setGridImage(gridImages);
+
+        return result;
     }
 
     public static Product findByPK(SQLiteDatabase db, int id) {

@@ -10,7 +10,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class GridViewAdapter extends BaseAdapter{
+
     private Context mContext;
+
     private String[] _deadlines;
     private Bitmap[] _images;
 
@@ -23,7 +25,7 @@ public class GridViewAdapter extends BaseAdapter{
     @Override
     public int getCount() {
         // TODO Auto-generated method stub
-        return _deadlines.length;
+        return _images.length;
     }
 
     @Override

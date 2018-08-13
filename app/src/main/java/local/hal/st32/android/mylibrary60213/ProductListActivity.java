@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -27,7 +26,7 @@ public class ProductListActivity extends AppCompatActivity {
     private GridView GRID_VIEW_IMAGE_TEXT;
     private Menu MENU;
 
-    private int[] _id;
+    private int[] _ids;
     private String[] _deadlines;
     private Bitmap[] _images;
 
@@ -61,22 +60,11 @@ public class ProductListActivity extends AppCompatActivity {
 
         DatabaseHelper helper = new DatabaseHelper(ProductListActivity.this);
         SQLiteDatabase db = helper.getWritableDatabase();
-        Cursor cursor = DatabaseAccess.findAll(db, _selectionCategory, _selectionState);
+        Product productData = DatabaseAccess.findAll(db, _selectionCategory, _selectionState);
 
-        _id = new int[cursor.getCount()];
-        _deadlines = new String[cursor.getCount()];
-        _images = new Bitmap[cursor.getCount()];
-
-        int i = 0;
-        if(cursor.moveToFirst()){
-            do {
-                _id[i] = cursor.getInt(cursor.getColumnIndex("_id"));;
-                _deadlines[i] = "賞味期限 : "+cursor.getString(cursor.getColumnIndex("deadline"));
-                _images[i] = Tool.getToolImage(cursor.getBlob(cursor.getColumnIndex("image")));
-
-                i ++;
-            }while (cursor.moveToNext());
-        }
+        _ids = productData.getGridId();
+        _deadlines = productData.getGridDeadline();
+        _images = productData.getGridImage();
 
         GridViewAdapter adapter = new GridViewAdapter(ProductListActivity.this, _deadlines, _images);
         GRID_VIEW_IMAGE_TEXT.setAdapter(adapter);
@@ -84,7 +72,7 @@ public class ProductListActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 INTENT.putExtra("mode", MODE_EDIT);
-                INTENT.putExtra("idNo", _id[position]);
+                INTENT.putExtra("idNo", _ids[position]);
                 startActivity(INTENT);
             }
         });
@@ -95,17 +83,11 @@ public class ProductListActivity extends AppCompatActivity {
         if (requestCode == RESULT_CAMERA) {
             Bitmap bitmap;
             if( data.getExtras() == null){
-                Log.d("debug","cancel ?");
+                Toast.makeText(ProductListActivity.this, "写真の取得に失敗しました", Toast.LENGTH_SHORT).show();
                 return;
             }
             else{
                 bitmap = (Bitmap) data.getExtras().get("data");
-
-                // 画像サイズを計測
-                int bmpWidth = bitmap.getWidth();
-                int bmpHeight = bitmap.getHeight();
-                Log.d("debug",String.format("w= %d",bmpWidth));
-                Log.d("debug",String.format("h= %d",bmpHeight));
             }
 
             INTENT.putExtra("mode", MODE_INSERT);

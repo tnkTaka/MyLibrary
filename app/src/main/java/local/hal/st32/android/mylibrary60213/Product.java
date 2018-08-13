@@ -1,5 +1,7 @@
 package local.hal.st32.android.mylibrary60213;
 
+import android.graphics.Bitmap;
+
 import java.sql.Timestamp;
 
 public class Product {
@@ -8,6 +10,10 @@ public class Product {
     private String _deadline;
     private int _done;
     private byte[] _image;
+
+    private int[] _gridIds;
+    private String[] _gridDeadlines;
+    private Bitmap[] _gridImages;
 
     public int getId(){
         return _id;
@@ -43,4 +49,27 @@ public class Product {
     public void setImage(byte[] image){
         _image = image;
     }
+
+    public int[] getGridId(){
+        return _gridIds;
+    }
+    public void setGridId(int[] gridIds){
+        _gridIds = gridIds;
+    }
+
+    public String[] getGridDeadline(){
+        return _gridDeadlines;
+    }
+    public void setGridDeadline(String[] gridDeadlines){
+        _gridDeadlines = gridDeadlines;
+    }
+
+    public Bitmap[] getGridImage(){
+        return _gridImages;
+    }
+    public void setGridImage(Bitmap[] gridImages){
+        _gridImages = gridImages;
+    }
+
+
 }
