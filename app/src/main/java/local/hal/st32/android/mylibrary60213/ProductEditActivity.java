@@ -3,11 +3,14 @@ package local.hal.st32.android.mylibrary60213;
 import android.app.DatePickerDialog;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.content.Intent;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -43,7 +46,6 @@ public class ProductEditActivity extends AppCompatActivity {
     private byte[] _byteImage;
     private String _deadline;
     private int _category;
-    private int _done;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,12 +128,32 @@ public class ProductEditActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        MenuInflater inflater = getMenuInflater();
+
+        if (_mode == ProductListActivity.MODE_INSERT){
+            return true;
+        }else{
+            inflater.inflate(R.menu.actionbar_menu,menu);
+            return true;
+        }
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item){
         int itemId = item.getItemId();
 
         switch (itemId){
-            case  android.R.id.home:
+            case android.R.id.home:
                 finish();
+                break;
+            case R.id.actionbar_Delete:
+                Bundle extras = new Bundle();
+                extras.putInt("idNo",_idNo);
+                DeleteDialogFragment dialog = new DeleteDialogFragment();
+                dialog.setArguments(extras);
+                FragmentManager manager = getSupportFragmentManager();
+                dialog.show(manager,"DeleteDialogFragment");
                 break;
         }
 
@@ -177,9 +199,9 @@ public class ProductEditActivity extends AppCompatActivity {
         SQLiteDatabase db = helper.getWritableDatabase();
         try {
             if (_mode == ProductListActivity.MODE_INSERT){
-                DatabaseAccess.insert(db, _category, _date, _done, _byteImage);
+                DatabaseAccess.insert(db, _category, _date, _byteImage);
             }else {
-                DatabaseAccess.update(db, _idNo, _category, _date, _done, _byteImage);
+                DatabaseAccess.update(db, _idNo, _category, _date, _byteImage);
             }
 
         } catch(Exception ex) {

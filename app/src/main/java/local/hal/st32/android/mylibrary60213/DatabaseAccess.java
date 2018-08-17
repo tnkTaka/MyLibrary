@@ -14,9 +14,9 @@ public class DatabaseAccess {
     public static Product findAll(SQLiteDatabase db, int category, int selectionState) {
         String sql ="";
         if (selectionState == 0){
-            sql = "SELECT _id, category, deadline, done, image FROM products ORDER BY deadline DESC";
+            sql = "SELECT _id, category, deadline, image FROM products ORDER BY deadline DESC";
         }else if (selectionState == 1){
-            sql = "SELECT _id, category, deadline, done, image FROM products WHERE category = "+category+" ORDER BY deadline DESC";
+            sql = "SELECT _id, category, deadline, image FROM products WHERE category = "+category+" ORDER BY deadline DESC";
         }
 
         Cursor cursor = db.rawQuery(sql, null);
@@ -63,50 +63,45 @@ public class DatabaseAccess {
     }
 
     public static Product findByPK(SQLiteDatabase db, int id) {
-        String sql = "SELECT _id, category, deadline, done, image FROM products WHERE _id = " + id ;
+        String sql = "SELECT _id, category, deadline, image FROM products WHERE _id = " + id ;
         Cursor cursor = db.rawQuery(sql, null);
         Product result = null;
         if(cursor.moveToFirst()) {
 
             int idxCategory = cursor.getColumnIndex("category");
             int idxDeadline = cursor.getColumnIndex("deadline");
-            int idxDone = cursor.getColumnIndex("done");
             int idxImage = cursor.getColumnIndex("image");
 
             int category = cursor.getInt(idxCategory);
             String deadline = cursor.getString(idxDeadline);
-            int done = cursor.getInt(idxDone);
             byte[] image = cursor.getBlob(idxImage);
 
             result = new Product();
             result.setId(id);
             result.setCategory(category);
             result.setDeadline(deadline);
-            result.setDone(done);
             result.setImage(image);
         }
         return result;
     }
 
-    public static long insert(SQLiteDatabase db, int category, String deadline, int done, byte[] image) {
-        String sql = "INSERT INTO products (category, deadline, done, image) VALUES (?, ?, ?, ?)";
+    public static long insert(SQLiteDatabase db, int category, String deadline, byte[] image) {
+        String sql = "INSERT INTO products (category, deadline, image) VALUES (?, ?, ?)";
         SQLiteStatement stmt = db.compileStatement(sql);
         stmt.bindLong(1, category);
         stmt.bindString(2, deadline);
-        stmt.bindLong(3, done);
-        stmt.bindBlob(4, image);
+        stmt.bindBlob(3, image);
         long id = stmt.executeInsert();
         return id;
     }
 
-    public static int update(SQLiteDatabase db, int id, int category, String deadline, int done, byte[] image) {
-        String sql = "UPDATE products SET category = ?, deadline = ?, done = ?, image = ? WHERE _id = ?";
+    public static int update(SQLiteDatabase db, int id, int category, String deadline, byte[] image) {
+        String sql = "UPDATE products SET category = ?, deadline = ?, image = ? WHERE _id = ?";
         SQLiteStatement stmt = db.compileStatement(sql);
         stmt.bindLong(1, category);
         stmt.bindString(2, deadline);
-        stmt.bindLong(3, done);
-        stmt.bindBlob(4, image);
-        stmt.bindLong(5, id);
+        stmt.bindBlob(3, image);
+        stmt.bindLong(4, id);
         int result = stmt.executeUpdateDelete();
         return result;
     }

@@ -2,8 +2,6 @@ package local.hal.st32.android.mylibrary60213;
 
 import android.graphics.Bitmap;
 
-import java.sql.Timestamp;
-
 public class Product {
     private int _id;
     private int _category;
@@ -34,13 +32,6 @@ public class Product {
     }
     public void setDeadline(String deadline) {
         _deadline = deadline;
-    }
-
-    public int getDone() {
-        return _done;
-    }
-    public void setDone(int done) {
-        _done = done;
     }
 
     public byte[] getImage(){

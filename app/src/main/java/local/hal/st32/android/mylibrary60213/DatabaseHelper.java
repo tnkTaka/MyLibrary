@@ -20,7 +20,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ps.append("_id INTEGER PRIMARY KEY AUTOINCREMENT,");
         ps.append("category INTEGER NOT NULL,");
         ps.append("deadline DATE NOT NULL,");
-        ps.append("done INTEGER DEFAULT 0 NOT NULL,");
         ps.append("image BLOB NOT NULL");
         ps.append(");");
 
