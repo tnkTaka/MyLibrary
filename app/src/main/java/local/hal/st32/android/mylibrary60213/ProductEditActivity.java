@@ -35,7 +35,7 @@ public class ProductEditActivity extends AppCompatActivity {
     private Button CREATE_BUTTON;
 
     private DateFormat JAPANESE_FORMAT;
-    private DateFormat NOMAL_FORMAT;
+    private DateFormat NORMAL_FORMAT;
 
     private String _date;
 
@@ -59,7 +59,7 @@ public class ProductEditActivity extends AppCompatActivity {
         Date today = new Date(System.currentTimeMillis());
 
         JAPANESE_FORMAT = new SimpleDateFormat("yyyy年MM月dd日");
-        NOMAL_FORMAT = new SimpleDateFormat("yyyy/MM/dd");
+        NORMAL_FORMAT = new SimpleDateFormat("yyyy/MM/dd");
 
         Intent intent = this.getIntent();
         _mode = intent.getIntExtra("mode",ProductListActivity.MODE_INSERT);
@@ -73,7 +73,7 @@ public class ProductEditActivity extends AppCompatActivity {
 
         if(_mode == ProductListActivity.MODE_INSERT){
             _deadline = JAPANESE_FORMAT.format(today);
-            _date = NOMAL_FORMAT.format(today);
+            _date = NORMAL_FORMAT.format(today);
             Bitmap image = (Bitmap) intent.getParcelableExtra("Image");
 
             _byteImage = Tool.getToolBytes(image);
@@ -90,11 +90,13 @@ public class ProductEditActivity extends AppCompatActivity {
                 _byteImage = productData.getImage();
                 _category = productData.getCategory();
                 _deadline = Tool.getToolJapaneseCalendar(productData.getDeadline());
+                _date = productData.getDeadline();
 
                 IMAGE_VIEW.setImageBitmap(Tool.getToolImage(_byteImage));
                 CATEGORY_SPINNER.setSelection(_category);
                 DEADLINE_EDIT_TEXT.setText(_deadline);
                 CREATE_BUTTON.setText("更新");
+
             }catch(Exception ex) {
                 Log.e("ERROR", ex.toString());
             }
