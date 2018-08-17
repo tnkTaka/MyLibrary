@@ -1,7 +1,6 @@
 package local.hal.st32.android.mylibrary60213;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.os.Bundle;

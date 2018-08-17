@@ -34,6 +34,11 @@ public class ProductEditActivity extends AppCompatActivity {
     private EditText DEADLINE_EDIT_TEXT;
     private Button CREATE_BUTTON;
 
+    private DateFormat JAPANESE_FORMAT;
+    private DateFormat NOMAL_FORMAT;
+
+    private String _date;
+
     private int _idNo;
     private byte[] _byteImage;
     private String _deadline;
@@ -51,9 +56,10 @@ public class ProductEditActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         // 今日日付の取得
-        Date now = new Date(System.currentTimeMillis());
-        DateFormat formatter = new SimpleDateFormat("yyyy年MM月dd日");
-        _deadline = formatter.format(now);
+        Date today = new Date(System.currentTimeMillis());
+
+        JAPANESE_FORMAT = new SimpleDateFormat("yyyy年MM月dd日");
+        NOMAL_FORMAT = new SimpleDateFormat("yyyy/MM/dd");
 
         Intent intent = this.getIntent();
         _mode = intent.getIntExtra("mode",ProductListActivity.MODE_INSERT);
@@ -66,6 +72,8 @@ public class ProductEditActivity extends AppCompatActivity {
         CREATE_BUTTON = findViewById(R.id.create_button);
 
         if(_mode == ProductListActivity.MODE_INSERT){
+            _deadline = JAPANESE_FORMAT.format(today);
+            _date = NOMAL_FORMAT.format(today);
             Bitmap image = (Bitmap) intent.getParcelableExtra("Image");
 
             _byteImage = Tool.getToolBytes(image);
@@ -74,7 +82,6 @@ public class ProductEditActivity extends AppCompatActivity {
         }else {
             _idNo = intent.getIntExtra("idNo", 0);
 
-            Log.d("idNo",""+_idNo);
             DatabaseHelper helper = new DatabaseHelper(ProductEditActivity.this);
             SQLiteDatabase db = helper.getWritableDatabase();
 
@@ -82,7 +89,7 @@ public class ProductEditActivity extends AppCompatActivity {
                 Product productData = DatabaseAccess.findByPK(db, _idNo);
                 _byteImage = productData.getImage();
                 _category = productData.getCategory();
-                _deadline = productData.getDeadline();
+                _deadline = Tool.getToolJapaneseCalendar(productData.getDeadline());
 
                 IMAGE_VIEW.setImageBitmap(Tool.getToolImage(_byteImage));
                 CATEGORY_SPINNER.setSelection(_category);
@@ -159,19 +166,18 @@ public class ProductEditActivity extends AppCompatActivity {
             Toast.makeText(ProductEditActivity.this, msg, Toast.LENGTH_SHORT).show();
 
             DEADLINE_EDIT_TEXT.setText(String.format("%d年%02d月%02d日",year,monthOfYear + 1,dayOfMonth));
+            _date = String.format("%d/%02d/%02d",year,monthOfYear + 1,dayOfMonth);
         }
     }
 
     public void onCreateButtonClick(View view) {
-        _deadline = DEADLINE_EDIT_TEXT.getText().toString();
-
         DatabaseHelper helper = new DatabaseHelper(ProductEditActivity.this);
         SQLiteDatabase db = helper.getWritableDatabase();
         try {
             if (_mode == ProductListActivity.MODE_INSERT){
-                DatabaseAccess.insert(db, _category, _deadline, _done, _byteImage);
+                DatabaseAccess.insert(db, _category, _date, _done, _byteImage);
             }else {
-                DatabaseAccess.update(db, _idNo, _category, _deadline, _done, _byteImage);
+                DatabaseAccess.update(db, _idNo, _category, _date, _done, _byteImage);
             }
 
         } catch(Exception ex) {

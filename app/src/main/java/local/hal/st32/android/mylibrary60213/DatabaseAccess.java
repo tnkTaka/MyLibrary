@@ -5,6 +5,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import android.graphics.Bitmap;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class DatabaseAccess {
 
     public static Product findAll(SQLiteDatabase db, int category, int selectionState) {
@@ -18,15 +22,32 @@ public class DatabaseAccess {
         Cursor cursor = db.rawQuery(sql, null);
         Product result = null;
 
+        Date now = new Date(System.currentTimeMillis());
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
+
         int[] gridIds = new int[cursor.getCount()];
         String[] gridDeadlines = new String[cursor.getCount()];
         Bitmap[] gridImages = new Bitmap[cursor.getCount()];
 
         int i = 0;
+        int diffDays = 0;
         if(cursor.moveToFirst()){
             do {
-                gridIds[i] = cursor.getInt(cursor.getColumnIndex("_id"));;
-                gridDeadlines[i] = "賞味期限 : "+cursor.getString(cursor.getColumnIndex("deadline"));
+                gridIds[i] = cursor.getInt(cursor.getColumnIndex("_id"));
+
+                try {
+                    diffDays = Tool.getToolDiffDays(now,formatter.parse(cursor.getString(cursor.getColumnIndex("deadline"))));
+                    if (diffDays > 0){
+                        gridDeadlines[i] = "賞味期限まであと "+diffDays+" 日";
+                    }else if (diffDays == 0){
+                        gridDeadlines[i] = "今日が賞味期限です！";
+                    }else {
+                        gridDeadlines[i] = "賞味期限が切れました！";
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
                 gridImages[i] = Tool.getToolImage(cursor.getBlob(cursor.getColumnIndex("image")));
 
                 i ++;
