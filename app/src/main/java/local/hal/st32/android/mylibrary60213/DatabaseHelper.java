@@ -19,6 +19,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ps.append("CREATE TABLE products (");
         ps.append("_id INTEGER PRIMARY KEY AUTOINCREMENT,");
         ps.append("category INTEGER NOT NULL,");
+        ps.append("perishable INTEGER NOT NULL,");
         ps.append("deadline DATE NOT NULL,");
         ps.append("image BLOB NOT NULL");
         ps.append(");");

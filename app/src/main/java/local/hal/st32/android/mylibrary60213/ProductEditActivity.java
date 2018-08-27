@@ -34,6 +34,7 @@ public class ProductEditActivity extends AppCompatActivity {
     private ImageView IMAGE_VIEW;
     private Button CAMERA_BUTTON;
     private Spinner CATEGORY_SPINNER;
+    private Spinner PERISHABLE_SPINNER;
     private EditText DEADLINE_EDIT_TEXT;
     private Button CREATE_BUTTON;
 
@@ -46,6 +47,7 @@ public class ProductEditActivity extends AppCompatActivity {
     private byte[] _byteImage;
     private String _deadline;
     private int _category;
+    private int _perishable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +74,7 @@ public class ProductEditActivity extends AppCompatActivity {
         CATEGORY_SPINNER = findViewById(R.id.category_spinner);
         DEADLINE_EDIT_TEXT = findViewById(R.id.deadline_editText);
         CREATE_BUTTON = findViewById(R.id.create_button);
+        PERISHABLE_SPINNER = findViewById(R.id.perishable_spinner);
 
         if(_mode == ProductListActivity.MODE_INSERT){
             _deadline = JAPANESE_FORMAT.format(today);
@@ -92,10 +95,12 @@ public class ProductEditActivity extends AppCompatActivity {
                 _byteImage = productData.getImage();
                 _category = productData.getCategory();
                 _deadline = Tool.getToolJapaneseCalendar(productData.getDeadline());
+                _perishable = productData.getPerishable();
                 _date = productData.getDeadline();
 
                 IMAGE_VIEW.setImageBitmap(Tool.getToolImage(_byteImage));
                 CATEGORY_SPINNER.setSelection(_category);
+                PERISHABLE_SPINNER.setSelection(_perishable);
                 DEADLINE_EDIT_TEXT.setText(_deadline);
                 CREATE_BUTTON.setText("更新");
 
@@ -111,6 +116,16 @@ public class ProductEditActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 _category = position;
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+                // selectしなかった場合
+            }
+        });
+        PERISHABLE_SPINNER.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                _perishable = position;
             }
             @Override
             public void onNothingSelected(AdapterView<?> arg0) {
@@ -199,9 +214,9 @@ public class ProductEditActivity extends AppCompatActivity {
         SQLiteDatabase db = helper.getWritableDatabase();
         try {
             if (_mode == ProductListActivity.MODE_INSERT){
-                DatabaseAccess.insert(db, _category, _date, _byteImage);
+                DatabaseAccess.insert(db, _category, _perishable, _date, _byteImage);
             }else {
-                DatabaseAccess.update(db, _idNo, _category, _date, _byteImage);
+                DatabaseAccess.update(db, _idNo, _category, _perishable, _date, _byteImage);
             }
 
         } catch(Exception ex) {

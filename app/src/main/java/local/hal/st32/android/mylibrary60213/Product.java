@@ -6,7 +6,7 @@ public class Product {
     private int _id;
     private int _category;
     private String _deadline;
-    private int _done;
+    private int _perishable;
     private byte[] _image;
 
     private int[] _gridIds;
@@ -25,6 +25,13 @@ public class Product {
     }
     public void  setCategory(int category){
         _category = category;
+    }
+
+    public int getPerishable(){
+        return _perishable;
+    }
+    public void  setPerishable(int perishable){
+        _perishable = perishable;
     }
 
     public String getDeadline() {

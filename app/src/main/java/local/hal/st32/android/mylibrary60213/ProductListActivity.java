@@ -29,7 +29,7 @@ public class ProductListActivity extends AppCompatActivity {
     private String[] _deadlines;
     private Bitmap[] _images;
 
-    private int _selectionCategory;
+    private int _selection;
     private int _selectionState;
 
     @Override
@@ -59,7 +59,7 @@ public class ProductListActivity extends AppCompatActivity {
 
         DatabaseHelper helper = new DatabaseHelper(ProductListActivity.this);
         SQLiteDatabase db = helper.getWritableDatabase();
-        Product productData = DatabaseAccess.findAll(db, _selectionCategory, _selectionState);
+        Product productData = DatabaseAccess.findAll(db, _selection, _selectionState);
 
         _ids = productData.getGridId();
         _deadlines = productData.getGridDeadline();
@@ -103,48 +103,66 @@ public class ProductListActivity extends AppCompatActivity {
 
         switch (itemId){
             case R.id.menu_category_meet:
-                _selectionCategory = 0;
+                _selection = 0;
                 Toast.makeText(ProductListActivity.this, "肉 が選択されました", Toast.LENGTH_SHORT).show();
                 onResume();
                 break;
             case R.id.menu_category_fish:
-                _selectionCategory = 1;
+                _selection = 1;
                 Toast.makeText(ProductListActivity.this, "魚 が選択されました", Toast.LENGTH_SHORT).show();
                 onResume();
                 break;
             case R.id.menu_category_vegetable:
-                _selectionCategory = 2;
+                _selection = 2;
                 Toast.makeText(ProductListActivity.this, "野菜 が選択されました", Toast.LENGTH_SHORT).show();
                 onResume();
                 break;
             case R.id.menu_category_fruit:
-                _selectionCategory = 3;
+                _selection = 3;
                 Toast.makeText(ProductListActivity.this, "果物 が選択されました", Toast.LENGTH_SHORT).show();
                 onResume();
                 break;
             case R.id.menu_category_seasoning:
-                _selectionCategory = 4;
+                _selection = 4;
                 Toast.makeText(ProductListActivity.this, "調味料 が選択されました", Toast.LENGTH_SHORT).show();
                 onResume();
                 break;
             case R.id.menu_category_alcohol:
-                _selectionCategory = 5;
+                _selection = 5;
                 Toast.makeText(ProductListActivity.this, "酒 が選択されました", Toast.LENGTH_SHORT).show();
                 onResume();
                 break;
             case R.id.menu_category_drink:
-                _selectionCategory = 6;
+                _selection = 6;
                 Toast.makeText(ProductListActivity.this, "飲料水 が選択されました", Toast.LENGTH_SHORT).show();
                 onResume();
                 break;
             case R.id.menu_category_sweetTreat:
-                _selectionCategory = 7;
+                _selection = 7;
                 Toast.makeText(ProductListActivity.this, "お菓子 が選択されました", Toast.LENGTH_SHORT).show();
                 onResume();
                 break;
             case R.id.menu_category_other:
-                _selectionCategory = 8;
+                _selection = 8;
                 Toast.makeText(ProductListActivity.this, "その他 が選択されました", Toast.LENGTH_SHORT).show();
+                onResume();
+                break;
+            case R.id.menu_ordinary:
+                _selectionState = 2;
+                _selection = 0;
+                Toast.makeText(ProductListActivity.this, "普通 が選択されました", Toast.LENGTH_SHORT).show();
+                onResume();
+                break;
+            case R.id.menu_easy_to_decay:
+                _selectionState = 2;
+                _selection = 1;
+                Toast.makeText(ProductListActivity.this, "腐りやすい が選択されました", Toast.LENGTH_SHORT).show();
+                onResume();
+                break;
+            case R.id.menu_hard_to_decay:
+                _selectionState = 2;
+                _selection = 2;
+                Toast.makeText(ProductListActivity.this, "腐りにくい が選択されました", Toast.LENGTH_SHORT).show();
                 onResume();
                 break;
             case R.id.menu_revert:
