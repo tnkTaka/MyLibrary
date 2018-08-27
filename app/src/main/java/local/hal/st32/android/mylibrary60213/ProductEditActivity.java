@@ -59,16 +59,16 @@ public class ProductEditActivity extends AppCompatActivity {
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        // 今日日付の取得
+        // 今日の日付の取得
         Date today = new Date(System.currentTimeMillis());
-
         JAPANESE_FORMAT = new SimpleDateFormat("yyyy年MM月dd日");
         NORMAL_FORMAT = new SimpleDateFormat("yyyy/MM/dd");
 
+        // intent取得
         Intent intent = this.getIntent();
         _mode = intent.getIntExtra("mode",ProductListActivity.MODE_INSERT);
 
-        // 紐付け
+        // レイアウトビューのIDと紐付け
         CAMERA_BUTTON = findViewById(R.id.camera_button);
         IMAGE_VIEW = findViewById(R.id.image_view);
         CATEGORY_SPINNER = findViewById(R.id.category_spinner);
@@ -76,6 +76,7 @@ public class ProductEditActivity extends AppCompatActivity {
         CREATE_BUTTON = findViewById(R.id.create_button);
         PERISHABLE_SPINNER = findViewById(R.id.perishable_spinner);
 
+        // 新規作成かどうか_modeから調査
         if(_mode == ProductListActivity.MODE_INSERT){
             _deadline = JAPANESE_FORMAT.format(today);
             _date = NORMAL_FORMAT.format(today);
@@ -112,6 +113,7 @@ public class ProductEditActivity extends AppCompatActivity {
             }
         }
 
+        // カテゴリースピナー選択リスナー
         CATEGORY_SPINNER.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -122,6 +124,8 @@ public class ProductEditActivity extends AppCompatActivity {
                 // selectしなかった場合
             }
         });
+
+        // 腐りやすさ選択リスナー
         PERISHABLE_SPINNER.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -132,6 +136,8 @@ public class ProductEditActivity extends AppCompatActivity {
                 // selectしなかった場合
             }
         });
+
+        // 取り直しボタンクリックリスナー
         CAMERA_BUTTON.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -193,6 +199,7 @@ public class ProductEditActivity extends AppCompatActivity {
                 Log.d("debug",String.format("h= %d",bmpHeight));
             }
 
+            // 撮影した画像をビットマップに変換してビューにセット
             _byteImage = Tool.getToolBytes(bitmap);
             IMAGE_VIEW.setImageBitmap(bitmap);
         }
@@ -210,6 +217,7 @@ public class ProductEditActivity extends AppCompatActivity {
     }
 
     public void onCreateButtonClick(View view) {
+        // DB登録　or　DB編集
         DatabaseHelper helper = new DatabaseHelper(ProductEditActivity.this);
         SQLiteDatabase db = helper.getWritableDatabase();
         try {

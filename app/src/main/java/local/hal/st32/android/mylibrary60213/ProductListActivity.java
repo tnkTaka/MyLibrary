@@ -61,6 +61,7 @@ public class ProductListActivity extends AppCompatActivity {
         SQLiteDatabase db = helper.getWritableDatabase();
         Product productData = DatabaseAccess.findAll(db, _selection, _selectionState);
 
+        // DBから各項目の配列を取得してAdapterに渡す
         _ids = productData.getGridId();
         _deadlines = productData.getGridDeadline();
         _images = productData.getGridImage();
@@ -79,6 +80,7 @@ public class ProductListActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // 写真を撮影して登録画面に遷移
         if (requestCode == RESULT_CAMERA) {
             Bitmap bitmap;
             if( data.getExtras() == null){
@@ -97,6 +99,7 @@ public class ProductListActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
+        // 各メニュー選択時の処理
         int itemId = item.getItemId();
         _selectionState = 1;
         MENU.getItem(0).setVisible(true);
